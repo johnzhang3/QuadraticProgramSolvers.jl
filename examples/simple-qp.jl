@@ -7,3 +7,6 @@ solve!(solver)
 
 solver = LDIPM(qp, verbose=true)
 solve!(solver)
+
+solver = ADMM(qp, verbose=true)
+solve!(solver)

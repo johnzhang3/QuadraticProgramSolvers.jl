@@ -67,3 +67,24 @@ end
         end
     end
 end
+
+##########################################################################################
+## check the solution of the randomly generated QPs using the ADMM/OSQP solver
+##########################################################################################
+function check_solution(solver::ADMM, qp::QP, tol=1e-6)
+    @test norm(solver.x - qp.x_sol, Inf) < tol
+    @test norm(solver.λ - [qp.μ_sol; qp.λ_sol], Inf) < tol
+    @test norm((solver.u - solver.z)[qp.n_eq+1:end] - qp.s_sol, Inf) < tol
+end
+@testset "ADMM on equally mixed random QPs" begin
+    for nx in 10:10:100
+        for i in 1:10
+            n_eq, n_ineq = nx ÷ 2, nx ÷ 2
+            qp = rand_qp(nx=nx, n_eq=n_eq, n_ineq=n_ineq, seed=i)
+            tol = 1e-8
+            solver = ADMM(qp; tol=tol, max_iter=2000)
+            solve!(solver)
+            check_solution(solver, qp, 1e-4)
+        end
+    end
+end
