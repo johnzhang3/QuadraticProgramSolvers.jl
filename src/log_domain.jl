@@ -56,7 +56,7 @@ function newton_solve!(solver::LDIPM)
         
         res = kkt_residual_relaxed(solver)
         if solver.verbose
-            println("iter: $i, norm(res): $(norm(res, Inf))")
+            println("   newton iter: $i, norm(res): $(norm(res, Inf))")
         end
         
         if norm(res, Inf) < solver.newton_tol
@@ -77,7 +77,7 @@ function solve!(solver::LDIPM)
         newton_solve!(solver)
         res = kkt_residual(solver)
         if solver.verbose
-            println("iter: $i, norm(res): $(norm(res, Inf)), κ: $(solver.κ)")
+            println("IP iter: $i, norm(res): $(norm(res, Inf)), κ: $(solver.κ)")
         end
         if norm(res, Inf) < solver.ip_tol
             return nothing
